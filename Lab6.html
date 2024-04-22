@@ -105,43 +105,257 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="security-data-science">Security Data Science</h2>
 <section id="manuel-archila---161250" class="level3">
 <h3 class="anchored" data-anchor-id="manuel-archila---161250">Manuel Archila - 161250</h3>
-<div id="cell-1" class="cell" data-execution_count="117">
+<div id="cell-1" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scapy.<span class="bu">all</span> <span class="im">as</span> scapy</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="descargue-e-archivo-analisis_paquetes.pcap-y-asignelo-a-una-variable." class="level5">
-<h5 class="anchored" data-anchor-id="descargue-e-archivo-analisis_paquetes.pcap-y-asignelo-a-una-variable.">1. Descargue e archivo analisis_paquetes.pcap y asignelo a una variable.</h5>
-<div id="cell-3" class="cell" data-execution_count="118">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scapy.<span class="bu">all</span> <span class="im">as</span> scapy</span>
+<section id="preambulo" class="level4">
+<h4 class="anchored" data-anchor-id="preambulo">Preambulo</h4>
+<div id="cell-3" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scapy.<span class="bu">all</span> <span class="im">import</span> sniff</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>archivo_pcap <span class="op">=</span> <span class="st">'analisis_paquetes.pcap'</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>paquetes <span class="op">=</span> sniff(count<span class="op">=</span><span class="dv">25</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>paquetes <span class="op">=</span> scapy.rdpcap(archivo_pcap)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>datos_paquetes <span class="op">=</span> []</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(paquetes)) </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(paquetes))   </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(paquetes)        </span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> paquete <span class="kw">in</span> paquetes:</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> paquete.haslayer(scapy.IP):</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        src_ip <span class="op">=</span> paquete[<span class="st">"IP"</span>].src</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        dst_ip <span class="op">=</span> paquete[<span class="st">"IP"</span>].dst</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        src_port <span class="op">=</span> paquete[<span class="st">"IP"</span>].sport</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        dst_port <span class="op">=</span> paquete[<span class="st">"IP"</span>].dport</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        payload <span class="op">=</span> <span class="bu">len</span>(paquete.payload)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        timestamp <span class="op">=</span> <span class="bu">float</span>(paquete.time)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>        payload_cont <span class="op">=</span> paquete.payload</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        datos_paquetes.append([src_ip, dst_ip, src_port, dst_port, payload, timestamp])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(paquetes[<span class="dv">0</span>])) </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> paquete <span class="kw">in</span> paquetes[:<span class="dv">5</span>]:  </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    paquete.show()           </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'scapy.plist.PacketList'&gt;
+25
+&lt;Sniffed: TCP:10 UDP:12 ICMP:0 Other:3&gt;
+&lt;class 'scapy.layers.l2.Ether'&gt;
+###[ Ethernet ]### 
+  dst       = 2c:fd:b3:91:9d:25
+  src       = c4:03:a8:2e:bd:64
+  type      = IPv4
+###[ IP ]### 
+     version   = 4
+     ihl       = 5
+     tos       = 0x0
+     len       = 150
+     id        = 38502
+     flags     = DF
+     frag      = 0
+     ttl       = 128
+     proto     = tcp
+     chksum    = 0x0
+     src       = 192.168.68.108
+     dst       = 192.168.68.109
+     \options   \
+###[ TCP ]### 
+        sport     = 64019
+        dport     = 8009
+        seq       = 2847727646
+        ack       = 624561081
+        dataofs   = 5
+        reserved  = 0
+        flags     = PA
+        window    = 513
+        chksum    = 0xab3
+        urgptr    = 0
+        options   = []
+###[ Raw ]### 
+           load      = "\x17\x03\x03\x00i\\xf7\x06\\xc34W\\x98\rc5'HO6\\xfbQ\x1c;\\xd2P\x01\\x85E\\x87î\n(\\xc8,\\xcc\\xe6\\xf9\\xfb\\xf8\\xb4\x14 \\xa0\\xdb\x1a9\\xe9L\\x90\\x9d\\xde\\xed9\x1fW\x0cd\\xf0n\\x8d\\xf0M\\xfd\\xef\\xad\\xf2=P\x08:\\xa7*z\\x99\\xa3@Q]\\x817\\x9e\\xc8\x1dF龒\\xf4\\xb8݀\\xc5\\xc0Q\\xbb\n\x16\\xa8\\x99\x17\x0b\\xd5\x00\\xd4\x13\\xa1\x17\x04\\xbd\\xe5"
+
+###[ Ethernet ]### 
+  dst       = c4:03:a8:2e:bd:64
+  src       = 2c:fd:b3:91:9d:25
+  type      = IPv4
+###[ IP ]### 
+     version   = 4
+     ihl       = 5
+     tos       = 0x0
+     len       = 150
+     id        = 27042
+     flags     = DF
+     frag      = 0
+     ttl       = 64
+     proto     = tcp
+     chksum    = 0xc695
+     src       = 192.168.68.109
+     dst       = 192.168.68.108
+     \options   \
+###[ TCP ]### 
+        sport     = 8009
+        dport     = 64019
+        seq       = 624561081
+        ack       = 2847727756
+        dataofs   = 5
+        reserved  = 0
+        flags     = PA
+        window    = 762
+        chksum    = 0xf782
+        urgptr    = 0
+        options   = []
+###[ Raw ]### 
+           load      = '\x17\x03\x03\x00i\\xceJ\\x8c\\xc1\\x8c\\xa2\x19\\xab\\xffZ7\x04\x0e$\\xab\\xd2\\xd7i\\x93\x1dh\rW`\\x96\\xec\\xd31o\x1aш\\xba\\xba\x0eM\\xa9\\x9f\\x8f\x08\\xf0\\xbb-\\xd37\\xb2\\xc6\\xd9)F\\x8d\\xcb\\xdbX\\xb2\\xd4k\\xf4V\x11.\x06\\x8fp\\xd2\\xf4\\xfc6\\xf6\\xf8\\xf7\\xaa8Rk\\xa5\x0bV\\xf5\x05Ef\\xecpV\x0e0\\xff\x1f\x0b\\xb7\\xbc\\xc2\x01\x15\\xdf\x08\\xe9S\\xe5\\xff\\x86\\xff^K'
+
+###[ Ethernet ]### 
+  dst       = 2c:fd:b3:91:9d:25
+  src       = c4:03:a8:2e:bd:64
+  type      = IPv4
+###[ IP ]### 
+     version   = 4
+     ihl       = 5
+     tos       = 0x0
+     len       = 40
+     id        = 38503
+     flags     = DF
+     frag      = 0
+     ttl       = 128
+     proto     = tcp
+     chksum    = 0x0
+     src       = 192.168.68.108
+     dst       = 192.168.68.109
+     \options   \
+###[ TCP ]### 
+        sport     = 64019
+        dport     = 8009
+        seq       = 2847727756
+        ack       = 624561191
+        dataofs   = 5
+        reserved  = 0
+        flags     = A
+        window    = 512
+        chksum    = 0xa45
+        urgptr    = 0
+        options   = ''
+
+###[ Ethernet ]### 
+  dst       = 01:00:5e:00:00:fb
+  src       = 62:d4:40:04:7c:e6
+  type      = IPv4
+###[ IP ]### 
+     version   = 4
+     ihl       = 5
+     tos       = 0x0
+     len       = 154
+     id        = 30335
+     flags     = DF
+     frag      = 0
+     ttl       = 255
+     proto     = udp
+     chksum    = 0x1eac
+     src       = 192.168.68.131
+     dst       = 224.0.0.251
+     \options   \
+###[ UDP ]### 
+        sport     = 5353
+        dport     = 5353
+        len       = 134
+        chksum    = 0x54af
+###[ DNS ]### 
+           id        = 2
+           qr        = 0
+           opcode    = QUERY
+           aa        = 0
+           tc        = 0
+           rd        = 0
+           ra        = 0
+           z         = 0
+           ad        = 0
+           cd        = 0
+           rcode     = ok
+           qdcount   = 4
+           ancount   = 0
+           nscount   = 0
+           arcount   = 0
+           \qd        \
+            |###[ DNS Question Record ]### 
+            |  qname     = '_%9E5E7C8F47989526C9BCD95D24084F6F0B27C5ED._sub._googlecast._tcp.local.'
+            |  qtype     = PTR
+            |  qclass    = IN
+            |###[ DNS Question Record ]### 
+            |  qname     = '_CFE7FEDA._sub._googlecast._tcp.local.'
+            |  qtype     = PTR
+            |  qclass    = IN
+            |###[ DNS Question Record ]### 
+            |  qname     = '_CC32E753._sub._googlecast._tcp.local.'
+            |  qtype     = PTR
+            |  qclass    = IN
+            |###[ DNS Question Record ]### 
+            |  qname     = '_googlecast._tcp.local.'
+            |  qtype     = PTR
+            |  qclass    = IN
+           an        = None
+           ns        = None
+           ar        = None
+
+###[ Ethernet ]### 
+  dst       = 20:1f:3b:8e:9e:15
+  src       = c4:03:a8:2e:bd:64
+  type      = IPv4
+###[ IP ]### 
+     version   = 4
+     ihl       = 5
+     tos       = 0x0
+     len       = 150
+     id        = 3352
+     flags     = DF
+     frag      = 0
+     ttl       = 128
+     proto     = tcp
+     chksum    = 0x0
+     src       = 192.168.68.108
+     dst       = 192.168.68.110
+     \options   \
+###[ TCP ]### 
+        sport     = 64017
+        dport     = 8009
+        seq       = 2055298832
+        ack       = 1334774286
+        dataofs   = 5
+        reserved  = 0
+        flags     = PA
+        window    = 512
+        chksum    = 0xab4
+        urgptr    = 0
+        options   = []
+###[ Raw ]### 
+           load      = '\x17\x03\x03\x00iAN\\xee\\xc2DX\x05b\\xcfqZ\\xe5\\x8b(\\xa6C*\\xbb\\xccr\x04\\xacC{\\xf8\\xa4\\xc2A\\xbb\\xa5|Z\\xe0F\\xf0CGb\\xa64\\x96\\xb1\\x92\\xcc\\xfd\x19@\\xab\x1f\\xf8;\x02\x06\\xa0\x15\\xda,\\xb9n]U)pHP[\x18g\\xc91&amp;\x03vҏ\\xe3E\x02\\x80\\xa8un\x07\\x8a\\xeeJm\\xb1\x1c\\xe8+\\xac\\x9a\x10*\\x86^08}T\\xa9\\xeaj\\xe3'
+</code></pre>
+</div>
+</div>
+<section id="descargue-e-archivo-analisis_paquetes.pcap-y-asignelo-a-una-variable." class="level5">
+<h5 class="anchored" data-anchor-id="descargue-e-archivo-analisis_paquetes.pcap-y-asignelo-a-una-variable.">1. Descargue e archivo analisis_paquetes.pcap y asignelo a una variable.</h5>
+<div id="cell-5" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scapy.<span class="bu">all</span> <span class="im">as</span> scapy</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>archivo_pcap <span class="op">=</span> <span class="st">'analisis_paquetes.pcap'</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>paquetes <span class="op">=</span> scapy.rdpcap(archivo_pcap)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>datos_paquetes <span class="op">=</span> []</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> paquete <span class="kw">in</span> paquetes:</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> paquete.haslayer(scapy.IP):</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        src_ip <span class="op">=</span> paquete[<span class="st">"IP"</span>].src</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        dst_ip <span class="op">=</span> paquete[<span class="st">"IP"</span>].dst</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        src_port <span class="op">=</span> paquete[<span class="st">"IP"</span>].sport</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        dst_port <span class="op">=</span> paquete[<span class="st">"IP"</span>].dport</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        payload <span class="op">=</span> <span class="bu">len</span>(paquete.payload)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        timestamp <span class="op">=</span> <span class="bu">float</span>(paquete.time)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        payload_cont <span class="op">=</span> paquete.payload</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        datos_paquetes.append([src_ip, dst_ip, src_port, dst_port, payload, timestamp])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="convierta-la-variable-a-un-dataframe-y-muestre-el-contenido-de-las-primeras-5-filas-del-dataset." class="level5">
 <h5 class="anchored" data-anchor-id="convierta-la-variable-a-un-dataframe-y-muestre-el-contenido-de-las-primeras-5-filas-del-dataset.">2, 3. Convierta la variable a un DataFrame y muestre el contenido de las primeras 5 filas del dataset.</h5>
-<div id="cell-5" class="cell" data-execution_count="119">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_paquetes <span class="op">=</span> pd.DataFrame(datos_paquetes, columns<span class="op">=</span>[<span class="st">'Src Address'</span>, <span class="st">'Dst Address'</span>, <span class="st">'Src Port'</span>, <span class="st">'Dst Port'</span>, <span class="st">'Payload Size'</span>, <span class="st">'Timestamp'</span>])</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df_paquetes.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="119">
+<div id="cell-7" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df_paquetes <span class="op">=</span> pd.DataFrame(datos_paquetes, columns<span class="op">=</span>[<span class="st">'Src Address'</span>, <span class="st">'Dst Address'</span>, <span class="st">'Src Port'</span>, <span class="st">'Dst Port'</span>, <span class="st">'Payload Size'</span>, <span class="st">'Timestamp'</span>])</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df_paquetes.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -212,13 +426,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="a-y-5.b-muestre-todas-las-ip-origen-y-muestre-todas-las-ip-destino" class="level5">
 <h5 class="anchored" data-anchor-id="a-y-5.b-muestre-todas-las-ip-origen-y-muestre-todas-las-ip-destino">5.a y 5.b Muestre todas las IP origen y muestre todas las IP destino</h5>
-<div id="cell-7" class="cell" data-execution_count="120">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"IPs Origen:"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_paquetes[<span class="st">'Src Address'</span>].unique())</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"IPs Destino:"</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_paquetes[<span class="st">'Dst Address'</span>].unique())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-9" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"IPs Origen:"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_paquetes[<span class="st">'Src Address'</span>].unique())</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"IPs Destino:"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_paquetes[<span class="st">'Dst Address'</span>].unique())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>IPs Origen:
 ['10.1.10.53' '84.54.22.33' '75.75.75.75']
@@ -234,20 +448,20 @@ IPs Destino:
 <li>¿A que puerto destino se comunica? ¿Cuál es el propósito de este puerto?</li>
 <li>¿Desde que puertos origen se comunica?</li>
 </ul>
-<div id="cell-9" class="cell" data-execution_count="121">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ip_origen_frecuente <span class="op">=</span> df_paquetes[<span class="st">'Src Address'</span>].mode()[<span class="dv">0</span>]</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"IP origen más frecuente: </span><span class="sc">{</span>ip_origen_frecuente<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>datos_ip_frecuente <span class="op">=</span> df_paquetes[df_paquetes[<span class="st">'Src Address'</span>] <span class="op">==</span> ip_origen_frecuente]</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>ip_destino_frecuente <span class="op">=</span> datos_ip_frecuente[<span class="st">'Dst Address'</span>].mode()[<span class="dv">0</span>]</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"IP destino más frecuente para la IP origen </span><span class="sc">{</span>ip_origen_frecuente<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>ip_destino_frecuente<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>puerto_destino_frecuente <span class="op">=</span> datos_ip_frecuente[<span class="st">'Dst Port'</span>].mode()[<span class="dv">0</span>]</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Puerto destino más frecuente para la IP origen </span><span class="sc">{</span>ip_origen_frecuente<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>puerto_destino_frecuente<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>puertos_origen <span class="op">=</span> datos_ip_frecuente[<span class="st">'Src Port'</span>].unique()</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Puertos origen desde los que se comunica la IP </span><span class="sc">{</span>ip_origen_frecuente<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>puertos_origen<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-11" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ip_origen_frecuente <span class="op">=</span> df_paquetes[<span class="st">'Src Address'</span>].mode()[<span class="dv">0</span>]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"IP origen más frecuente: </span><span class="sc">{</span>ip_origen_frecuente<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>datos_ip_frecuente <span class="op">=</span> df_paquetes[df_paquetes[<span class="st">'Src Address'</span>] <span class="op">==</span> ip_origen_frecuente]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>ip_destino_frecuente <span class="op">=</span> datos_ip_frecuente[<span class="st">'Dst Address'</span>].mode()[<span class="dv">0</span>]</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"IP destino más frecuente para la IP origen </span><span class="sc">{</span>ip_origen_frecuente<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>ip_destino_frecuente<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>puerto_destino_frecuente <span class="op">=</span> datos_ip_frecuente[<span class="st">'Dst Port'</span>].mode()[<span class="dv">0</span>]</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Puerto destino más frecuente para la IP origen </span><span class="sc">{</span>ip_origen_frecuente<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>puerto_destino_frecuente<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>puertos_origen <span class="op">=</span> datos_ip_frecuente[<span class="st">'Src Port'</span>].unique()</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Puertos origen desde los que se comunica la IP </span><span class="sc">{</span>ip_origen_frecuente<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>puertos_origen<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>IP origen más frecuente: 10.1.10.53
 IP destino más frecuente para la IP origen 10.1.10.53: 84.54.22.33
@@ -258,39 +472,15 @@ Puertos origen desde los que se comunica la IP 10.1.10.53: [   53 15812 23903]</
 </section>
 <section id="a.-genere-una-gráfica-de-barras-2d-horizontales-en-el-eje-y-las-ips-origen-y-en-el-eje-x-lasuma-de-los-payloads-bytes-enviados-desde-dichas-direcciones." class="level5">
 <h5 class="anchored" data-anchor-id="a.-genere-una-gráfica-de-barras-2d-horizontales-en-el-eje-y-las-ips-origen-y-en-el-eje-x-lasuma-de-los-payloads-bytes-enviados-desde-dichas-direcciones.">6.a. Genere una gráfica de barras 2D horizontales, en el eje Y las IPs origen, y en el eje X lasuma de los payloads (bytes) enviados desde dichas direcciones.</h5>
-<div id="cell-11" class="cell" data-execution_count="122">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sum_payloads <span class="op">=</span> df_paquetes.groupby(<span class="st">'Src Address'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-13" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sum_payloads <span class="op">=</span> df_paquetes.groupby(<span class="st">'Src Address'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-12" class="cell" data-execution_count="123">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sum_payloads.sort_values().plot(kind<span class="op">=</span><span class="st">'barh'</span>, color<span class="op">=</span><span class="st">'skyblue'</span>) </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Suma de Payloads (bytes)'</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Direcciones IP de Origen'</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Suma de Payloads Enviados desde Direcciones IP de Origen'</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Lab6_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="b.-genere-una-gráfica-de-barras-2d-horizontales-en-el-eje-y-las-ip-destino-y-en-el-eje-xla-suma-de-los-payloads-bytes-recibidos-en-dichas-direcciones." class="level5">
-<h5 class="anchored" data-anchor-id="b.-genere-una-gráfica-de-barras-2d-horizontales-en-el-eje-y-las-ip-destino-y-en-el-eje-xla-suma-de-los-payloads-bytes-recibidos-en-dichas-direcciones.">6.b. Genere una gráfica de barras 2D horizontales, en el eje Y las IP destino, y en el eje Xla suma de los payloads (bytes) recibidos en dichas direcciones.</h5>
-<div id="cell-14" class="cell" data-execution_count="124">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>payloads_por_destino <span class="op">=</span> df_paquetes.groupby(<span class="st">'Dst Address'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>()</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>payloads_ordenados <span class="op">=</span> payloads_por_destino.sort_values()</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear gráfica de barras horizontal</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>payloads_ordenados.plot(kind<span class="op">=</span><span class="st">'barh'</span>, color<span class="op">=</span><span class="st">'blue'</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Suma de Payloads (bytes)'</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Direcciones IP de Destino'</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Suma de Payloads Recibidos en Direcciones IP de Destino'</span>)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-14" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>sum_payloads.sort_values().plot(kind<span class="op">=</span><span class="st">'barh'</span>, color<span class="op">=</span><span class="st">'skyblue'</span>) </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Suma de Payloads (bytes)'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Direcciones IP de Origen'</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Suma de Payloads Enviados desde Direcciones IP de Origen'</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -300,18 +490,21 @@ Puertos origen desde los que se comunica la IP 10.1.10.53: [   53 15812 23903]</
 </div>
 </div>
 </section>
-<section id="c.-genere-una-gráfica-de-barras-2d-horizontales-en-el-eje-y-los-puertos-origen-y-en-el-eje-x-la-suma-de-los-payloads-bytes-enviados-de-dichos-puertos." class="level5">
-<h5 class="anchored" data-anchor-id="c.-genere-una-gráfica-de-barras-2d-horizontales-en-el-eje-y-los-puertos-origen-y-en-el-eje-x-la-suma-de-los-payloads-bytes-enviados-de-dichos-puertos.">6. c.&nbsp;Genere una gráfica de barras 2D horizontales, en el eje Y los puertos origen, y en el eje X la suma de los payloads (bytes) enviados de dichos puertos.</h5>
-<div id="cell-16" class="cell" data-execution_count="125">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>payloads_por_puerto <span class="op">=</span> df_paquetes.groupby(<span class="st">'Src Port'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>()</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>payloads_ordenados.plot(kind<span class="op">=</span><span class="st">'barh'</span>, color<span class="op">=</span><span class="st">'purple'</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Suma de Payloads (bytes)'</span>)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Puertos de Origen'</span>)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Suma de Payloads Enviados desde Puertos de Origen'</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="b.-genere-una-gráfica-de-barras-2d-horizontales-en-el-eje-y-las-ip-destino-y-en-el-eje-xla-suma-de-los-payloads-bytes-recibidos-en-dichas-direcciones." class="level5">
+<h5 class="anchored" data-anchor-id="b.-genere-una-gráfica-de-barras-2d-horizontales-en-el-eje-y-las-ip-destino-y-en-el-eje-xla-suma-de-los-payloads-bytes-recibidos-en-dichas-direcciones.">6.b. Genere una gráfica de barras 2D horizontales, en el eje Y las IP destino, y en el eje Xla suma de los payloads (bytes) recibidos en dichas direcciones.</h5>
+<div id="cell-16" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>payloads_por_destino <span class="op">=</span> df_paquetes.groupby(<span class="st">'Dst Address'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>payloads_ordenados <span class="op">=</span> payloads_por_destino.sort_values()</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear gráfica de barras horizontal</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>payloads_ordenados.plot(kind<span class="op">=</span><span class="st">'barh'</span>, color<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Suma de Payloads (bytes)'</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Direcciones IP de Destino'</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Suma de Payloads Recibidos en Direcciones IP de Destino'</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -321,21 +514,18 @@ Puertos origen desde los que se comunica la IP 10.1.10.53: [   53 15812 23903]</
 </div>
 </div>
 </section>
-<section id="d.-genere-una-gráfica-2d-de-barras-horizontales-en-el-eje-y-los-puertos-destino-y-en-el-eje-x-la-suma-de-los-payloads-bytes-recibidos-en-dichos-puertos." class="level5">
-<h5 class="anchored" data-anchor-id="d.-genere-una-gráfica-2d-de-barras-horizontales-en-el-eje-y-los-puertos-destino-y-en-el-eje-x-la-suma-de-los-payloads-bytes-recibidos-en-dichos-puertos.">6. d.&nbsp;Genere una gráfica 2D de barras horizontales, en el eje Y los puertos destino, y en el eje X la suma de los payloads (bytes) recibidos en dichos puertos.</h5>
-<div id="cell-18" class="cell" data-execution_count="126">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>payloads_por_puerto_destino <span class="op">=</span> df_paquetes.groupby(<span class="st">'Dst Port'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>()</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>payloads_ordenados <span class="op">=</span> payloads_por_puerto_destino.sort_values()</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear gráfica de barras horizontal</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>payloads_ordenados.plot(kind<span class="op">=</span><span class="st">'barh'</span>, color<span class="op">=</span><span class="st">'teal'</span>)</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Suma de Payloads (bytes)'</span>)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Puertos de Destino'</span>)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Suma de Payloads Recibidos en Puertos de Destino'</span>)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="c.-genere-una-gráfica-de-barras-2d-horizontales-en-el-eje-y-los-puertos-origen-y-en-el-eje-x-la-suma-de-los-payloads-bytes-enviados-de-dichos-puertos." class="level5">
+<h5 class="anchored" data-anchor-id="c.-genere-una-gráfica-de-barras-2d-horizontales-en-el-eje-y-los-puertos-origen-y-en-el-eje-x-la-suma-de-los-payloads-bytes-enviados-de-dichos-puertos.">6. c.&nbsp;Genere una gráfica de barras 2D horizontales, en el eje Y los puertos origen, y en el eje X la suma de los payloads (bytes) enviados de dichos puertos.</h5>
+<div id="cell-18" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>payloads_por_puerto <span class="op">=</span> df_paquetes.groupby(<span class="st">'Src Port'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>payloads_ordenados.plot(kind<span class="op">=</span><span class="st">'barh'</span>, color<span class="op">=</span><span class="st">'purple'</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Suma de Payloads (bytes)'</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Puertos de Origen'</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Suma de Payloads Enviados desde Puertos de Origen'</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -345,19 +535,43 @@ Puertos origen desde los que se comunica la IP 10.1.10.53: [   53 15812 23903]</
 </div>
 </div>
 </section>
-<section id="e.-genere-una-gráfica-de-barras-2d-verticales-en-el-eje-y-la-suma-de-los-payload-en-el-eje-x-el-tiempo-para-la-ip-origen-más-frecuente." class="level5">
-<h5 class="anchored" data-anchor-id="e.-genere-una-gráfica-de-barras-2d-verticales-en-el-eje-y-la-suma-de-los-payload-en-el-eje-x-el-tiempo-para-la-ip-origen-más-frecuente.">6.e. Genere una gráfica de barras 2D verticales, en el eje Y la suma de los payload, en el eje X el tiempo, para la IP origen más frecuente.</h5>
-<div id="cell-20" class="cell" data-execution_count="127">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>payloads_por_tiempo <span class="op">=</span> df_paquetes[df_paquetes[<span class="st">'Src Address'</span>] <span class="op">==</span> ip_origen_frecuente].reset_index().groupby(<span class="st">'index'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>()</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>payloads_por_tiempo.plot(kind<span class="op">=</span><span class="st">'bar'</span>, color<span class="op">=</span><span class="st">'skyblue'</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Suma de Payloads (bytes)'</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Tiempo'</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Suma de Payloads por Tiempo para la IP origen más frecuente'</span>)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="d.-genere-una-gráfica-2d-de-barras-horizontales-en-el-eje-y-los-puertos-destino-y-en-el-eje-x-la-suma-de-los-payloads-bytes-recibidos-en-dichos-puertos." class="level5">
+<h5 class="anchored" data-anchor-id="d.-genere-una-gráfica-2d-de-barras-horizontales-en-el-eje-y-los-puertos-destino-y-en-el-eje-x-la-suma-de-los-payloads-bytes-recibidos-en-dichos-puertos.">6. d.&nbsp;Genere una gráfica 2D de barras horizontales, en el eje Y los puertos destino, y en el eje X la suma de los payloads (bytes) recibidos en dichos puertos.</h5>
+<div id="cell-20" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>payloads_por_puerto_destino <span class="op">=</span> df_paquetes.groupby(<span class="st">'Dst Port'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>payloads_ordenados <span class="op">=</span> payloads_por_puerto_destino.sort_values()</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear gráfica de barras horizontal</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>payloads_ordenados.plot(kind<span class="op">=</span><span class="st">'barh'</span>, color<span class="op">=</span><span class="st">'teal'</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Suma de Payloads (bytes)'</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Puertos de Destino'</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Suma de Payloads Recibidos en Puertos de Destino'</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="Lab6_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="e.-genere-una-gráfica-de-barras-2d-verticales-en-el-eje-y-la-suma-de-los-payload-en-el-eje-x-el-tiempo-para-la-ip-origen-más-frecuente." class="level5">
+<h5 class="anchored" data-anchor-id="e.-genere-una-gráfica-de-barras-2d-verticales-en-el-eje-y-la-suma-de-los-payload-en-el-eje-x-el-tiempo-para-la-ip-origen-más-frecuente.">6.e. Genere una gráfica de barras 2D verticales, en el eje Y la suma de los payload, en el eje X el tiempo, para la IP origen más frecuente.</h5>
+<div id="cell-22" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>payloads_por_tiempo <span class="op">=</span> df_paquetes[df_paquetes[<span class="st">'Src Address'</span>] <span class="op">==</span> ip_origen_frecuente].reset_index().groupby(<span class="st">'index'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>()</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>payloads_por_tiempo.plot(kind<span class="op">=</span><span class="st">'bar'</span>, color<span class="op">=</span><span class="st">'skyblue'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Suma de Payloads (bytes)'</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Tiempo'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Suma de Payloads por Tiempo para la IP origen más frecuente'</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Lab6_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -369,17 +583,18 @@ Puertos origen desde los que se comunica la IP 10.1.10.53: [   53 15812 23903]</
 </section>
 </section>
 </section>
+</section>
 <section id="analisis-de-payload" class="level2">
 <h2 class="anchored" data-anchor-id="analisis-de-payload">Analisis de Payload</h2>
 <section id="a.-cree-un-nuevo-df-que-incluya-únicamente-las-conexiones-con-la-dirección-ip-origen-más-frecuente." class="level5">
 <h5 class="anchored" data-anchor-id="a.-cree-un-nuevo-df-que-incluya-únicamente-las-conexiones-con-la-dirección-ip-origen-más-frecuente.">a. Cree un nuevo DF que incluya únicamente las conexiones con la dirección IP origen más frecuente.</h5>
-<div id="cell-25" class="cell" data-execution_count="128">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ip_origen_frecuente <span class="op">=</span> df_paquetes[<span class="st">'Src Address'</span>].mode()[<span class="dv">0</span>]</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>df_ip_frecuente <span class="op">=</span> df_paquetes[df_paquetes[<span class="st">'Src Address'</span>] <span class="op">==</span> ip_origen_frecuente]</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>df_ip_frecuente</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="128">
+<div id="cell-27" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ip_origen_frecuente <span class="op">=</span> df_paquetes[<span class="st">'Src Address'</span>].mode()[<span class="dv">0</span>]</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>df_ip_frecuente <span class="op">=</span> df_paquetes[df_paquetes[<span class="st">'Src Address'</span>] <span class="op">==</span> ip_origen_frecuente]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>df_ip_frecuente</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
 <div>
 
 
@@ -684,22 +899,22 @@ Puertos origen desde los que se comunica la IP 10.1.10.53: [   53 15812 23903]</
 </section>
 <section id="b.-cree-un-nuevo-df-que-utilice-el-df-anterior-con-las-columnas-src-dst-y-payload-y-agrúpelas-por-dst-y-la-suma-del-payload" class="level5">
 <h5 class="anchored" data-anchor-id="b.-cree-un-nuevo-df-que-utilice-el-df-anterior-con-las-columnas-src-dst-y-payload-y-agrúpelas-por-dst-y-la-suma-del-payload">b. Cree un nuevo DF que utilice el DF anterior con las columnas src, dst y payload y agrúpelas por dst y la suma del payload</h5>
-<div id="cell-27" class="cell" data-execution_count="129">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_agrupado <span class="op">=</span> df_ip_frecuente.groupby(<span class="st">'Dst Address'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>().reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-29" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df_agrupado <span class="op">=</span> df_ip_frecuente.groupby(<span class="st">'Dst Address'</span>)[<span class="st">'Payload Size'</span>].<span class="bu">sum</span>().reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="c.-obtenga-la-ip-destino-que-más-ha-intercambiado-bytes-con-la-ip-más-frecuente.-esta-ip-es-sospechosa-por-la-cantidad-de-bytes-intercambiados-entre-todas-las-direcciones." class="level5">
 <h5 class="anchored" data-anchor-id="c.-obtenga-la-ip-destino-que-más-ha-intercambiado-bytes-con-la-ip-más-frecuente.-esta-ip-es-sospechosa-por-la-cantidad-de-bytes-intercambiados-entre-todas-las-direcciones.">c.&nbsp;Obtenga la IP destino que más ha intercambiado bytes con la IP más frecuente. Esta IP es sospechosa por la cantidad de bytes intercambiados, entre todas las direcciones.</h5>
-<div id="cell-29" class="cell" data-execution_count="130">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ip_sospechosa <span class="op">=</span> df_agrupado[df_agrupado[<span class="st">'Payload Size'</span>] <span class="op">==</span> df_agrupado[<span class="st">'Payload Size'</span>].<span class="bu">max</span>()][<span class="st">'Dst Address'</span>].iloc[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-31" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>ip_sospechosa <span class="op">=</span> df_agrupado[df_agrupado[<span class="st">'Payload Size'</span>] <span class="op">==</span> df_agrupado[<span class="st">'Payload Size'</span>].<span class="bu">max</span>()][<span class="st">'Dst Address'</span>].iloc[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="d.-cree-un-nuevo-df-con-la-conversación-entre-la-ip-más-frecuente-y-la-ip-sospechosa." class="level5">
 <h5 class="anchored" data-anchor-id="d.-cree-un-nuevo-df-con-la-conversación-entre-la-ip-más-frecuente-y-la-ip-sospechosa.">d.&nbsp;Cree un nuevo DF con la conversación entre la IP más frecuente y la IP sospechosa.</h5>
-<div id="cell-31" class="cell" data-execution_count="131">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df_conversacion <span class="op">=</span> df_ip_frecuente[(df_ip_frecuente[<span class="st">'Src Address'</span>] <span class="op">==</span> ip_origen_frecuente) <span class="op">&amp;</span> (df_ip_frecuente[<span class="st">'Dst Address'</span>] <span class="op">==</span> ip_sospechosa)]</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df_conversacion.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="131">
+<div id="cell-33" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_conversacion <span class="op">=</span> df_ip_frecuente[(df_ip_frecuente[<span class="st">'Src Address'</span>] <span class="op">==</span> ip_origen_frecuente) <span class="op">&amp;</span> (df_ip_frecuente[<span class="st">'Dst Address'</span>] <span class="op">==</span> ip_sospechosa)]</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_conversacion.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
 <div>
 
 
@@ -770,14 +985,14 @@ Puertos origen desde los que se comunica la IP 10.1.10.53: [   53 15812 23903]</
 </section>
 <section id="e.-obtenga-los-payloads-del-df-del-inciso-anterior-y-añada-cada-uno-en-un-array." class="level5">
 <h5 class="anchored" data-anchor-id="e.-obtenga-los-payloads-del-df-del-inciso-anterior-y-añada-cada-uno-en-un-array.">e. Obtenga los payloads del DF del inciso anterior, y añada cada uno en un array.</h5>
-<div id="cell-33" class="cell" data-execution_count="132">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>array_payloads <span class="op">=</span> df_conversacion[<span class="st">'Payload Size'</span>].to_numpy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-35" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>array_payloads <span class="op">=</span> df_conversacion[<span class="st">'Payload Size'</span>].to_numpy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="f.-muestre-el-contenido-del-array." class="level5">
 <h5 class="anchored" data-anchor-id="f.-muestre-el-contenido-del-array.">f.&nbsp;Muestre el contenido del array.</h5>
-<div id="cell-35" class="cell" data-execution_count="133">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(array_payloads)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-37" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(array_payloads)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[ 961  975 1012  998 1003 1045 1008  979  959  992 1051 1006  986 1004
  1037 1004 1039 1037 1035 1010 1006 1006 1013 1019 1005 1017 1027  969
@@ -787,10 +1002,10 @@ Puertos origen desde los que se comunica la IP 10.1.10.53: [   53 15812 23903]</
 </section>
 <section id="g.-observe-los-primeros-bytes-del-contenido-encuentra-algún-dato-que-no-haga-sentido-que-se-envíe-al-puerto-destino-describa-lo-que-encontró" class="level5">
 <h5 class="anchored" data-anchor-id="g.-observe-los-primeros-bytes-del-contenido-encuentra-algún-dato-que-no-haga-sentido-que-se-envíe-al-puerto-destino-describa-lo-que-encontró">g. Observe los primeros bytes del contenido, ¿encuentra algún dato que no haga sentido que se envíe al puerto destino? Describa lo que encontró</h5>
-<div id="cell-37" class="cell" data-execution_count="134">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Bytes del payload:"</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> payload <span class="kw">in</span> array_payloads:</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Primeros bytes:"</span>, <span class="bu">str</span>(payload)[:<span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-39" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Bytes del payload:"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> payload <span class="kw">in</span> array_payloads:</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Primeros bytes:"</span>, <span class="bu">str</span>(payload)[:<span class="dv">10</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Bytes del payload:
